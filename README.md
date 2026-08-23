@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,27 +98,45 @@ Thank you for visiting ❤️<br>
 
 </div>
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyBIhlERF0_2HXE58lms4qMBMgZdH6aLjOM",
-    authDomain: "taki-efdfa.firebaseapp.com",
-    projectId: "taki-efdfa",
-    storageBucket: "taki-efdfa.firebasestorage.app",
-    messagingSenderId: "430185667838",
-    appId: "1:430185667838:web:23bc24a8ba84f6fa4ed9af",
-    measurementId: "G-4DRVQTHCPY"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyBIhlERF0_2HXE58lms4qMBMgZdH6aLjOM",
+  authDomain: "taki-efdfa.firebaseapp.com",
+  projectId: "taki-efdfa",
+  storageBucket: "taki-efdfa.firebasestorage.app",
+  messagingSenderId: "430185667838",
+  appId: "1:430185667838:web:23bc24a8ba84f6fa4ed9af"
+};
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const textarea = document.querySelector("textarea");
+const button = document.querySelector("button");
+
+button.addEventListener("click", async () => {
+  const message = textarea.value.trim();
+
+  if (message === "") {
+    alert("Please write a message.");
+    return;
+  }
+
+  try {
+    await addDoc(collection(db, "messages"), {
+      text: message,
+      createdAt: serverTimestamp()
+    });
+
+    alert("Thank you! Your message has been sent.");
+    textarea.value = "";
+  } catch (error) {
+    alert("Error sending message.");
+    console.error(error);
+  }
+});
 </script>
 </body>
 </html>
